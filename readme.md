@@ -1,6 +1,6 @@
 ## Usage
 
-Download Oracle cards as oracle-cards.json from https://scryfall.com/docs/api/bulk-data. Put your decklist to a text-file and run.
+Download Oracle cards as default-cards.json from https://scryfall.com/docs/api/bulk-data. Put your decklist to a text-file and run.
 
 ```bash
 python ./tokens.py -p "decklist.txt"
@@ -8,13 +8,13 @@ python ./tokens.py -p "decklist.txt"
 
 Format options (WIP):
 
-`withCount` (default)
+default
 
 ```bash
 1 Raise the Alarm
 ```
 
-justName
+`-f justName`
 
 ```bash
 Raise the Alarm
