@@ -68,7 +68,7 @@ if __name__ == '__main__':
             if token.get("power"):
                 element.update( {"stats": token["power"]+"/"+token["toughness"] })
             
-            if token.get("oracle"):
+            if token.get("oracle_text"):
                 element.update( {"oracle": token["oracle_text"].replace("\u2014", "-")})
             
             if len(next((item for item in tokens if item == element), [])) == 0:
