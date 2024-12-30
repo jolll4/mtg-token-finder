@@ -48,7 +48,11 @@ if __name__ == '__main__':
         found_token = ([ item for item in token_db if item.get("id") == id ])
         if len(found_token) > 0:
             token = found_token[0]
-            tokens.append({"name": token["name"], "type": token["type_line"], "colors": token["colors"], "oracle": token["oracle_text"]})
+            if token.get("power"):
+                tokens.append({"name": token["name"], "type": token["type_line"], "colors": token["colors"], "stats": token["power"]+"/"+token["toughness"], "oracle": token["oracle_text"]})
+            else:
+                tokens.append({"name": token["name"], "type": token["type_line"], "colors": token["colors"], "oracle": token["oracle_text"]})
+                
 
     with open("tokens.json", "w", encoding="utf8") as file:
         json.dump(tokens, file, indent=2)

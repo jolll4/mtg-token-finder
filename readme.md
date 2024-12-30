@@ -1,7 +1,9 @@
-Oracle data pulled 20241229100204
+## Usage
+
+Download Oracle cards as oracle-cards.json from https://scryfall.com/docs/api/bulk-data. Put your decklist to a text-file and run.
 
 ```bash
-python ./tokens.py -p "decklist.txt" -f withCount
+python ./tokens.py -p "decklist.txt"
 ```
 
 Format options (WIP):

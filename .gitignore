@@ -1,4 +1,4 @@
 env
-decklist.txt
+*.txt
 oracle-cards.json
 tokens.json
