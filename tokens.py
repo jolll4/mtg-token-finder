@@ -57,7 +57,7 @@ if __name__ == '__main__':
         found_token = ([ item for item in token_db if item.get("id") == id ])
         if len(found_token) > 0:
             token = found_token[0]
-            element = { "id": len(tokens)+1, "name": token["name"]}
+            element = { "name": token["name"]}
             element.update( { "type": token["type_line"].replace("\u2014", "-") } )
 
             if token.get("colors") and len(token["colors"]) > 0:
@@ -71,7 +71,13 @@ if __name__ == '__main__':
             if token.get("oracle"):
                 element.update( {"oracle": token["oracle_text"].replace("\u2014", "-")})
             
-            tokens.append(element)
+            if len(next((item for item in tokens if item == element), [])) == 0:
+                tokens.append(element)
+    
+    if len(tokens) > 0:
+        tokens = sorted(tokens, key=lambda d: d["name"])
+        for i in range(0, len(tokens)):
+            tokens[i].update( {"id": i+1})
 
     with open("tokens.json", "w", encoding="utf8") as file:
         json.dump(tokens, file, indent=2)
