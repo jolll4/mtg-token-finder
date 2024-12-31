@@ -7,7 +7,10 @@ def find_tokens(db, card_name, format):
     if format == "justName":
         name = card_name.rstrip()
     else:
-        name = " ".join(card_name.rsplit(" ")[1:]).rstrip()
+        name = " ".join(card_name.rsplit(" ")[1:]).strip()
+
+    if "]" in name:
+        name = "".join(name.split("]")[1:]).lstrip()
 
     card = [item for item in db if item.get("name")==name]
     if len(card) == 0:

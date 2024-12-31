@@ -12,10 +12,12 @@ default
 
 ```bash
 1 Raise the Alarm
+1 [BFZ#144] Dragonmaster Outcast
 ```
 
 `-f justName`
 
 ```bash
 Raise the Alarm
+[BFZ#144] Dragonmaster Outcast
 ```
