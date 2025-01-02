@@ -1,7 +1,9 @@
 import argparse
 import json
+import ijson
+import time 
 
-def find_tokens(db, card_name, format):
+def find_token_ids(db, card_name, format):
     if card_name[0:2] == '//' or card_name.rstrip() == "":
         return []
     if format == "justName":
@@ -23,13 +25,8 @@ def find_tokens(db, card_name, format):
 
         return token_ids
 
-def relevant_cards(oracle_cards):
-    return [item for item in oracle_cards if item.get("all_parts") ]
-
-def tokens(oracle_cards):
-    return [item for item in oracle_cards if item.get("type_line") and "Token" in item.get("type_line") ]
-
 if __name__ == '__main__':
+    start = time.time()
     parser = argparse.ArgumentParser()
     parser.add_argument("-p", "--path", type=str)
     parser.add_argument("-f", "--format", type=str)
@@ -41,25 +38,35 @@ if __name__ == '__main__':
     else:
         format = "default"
 
-    with open("default-cards.json", encoding="utf8") as oracle_cards_file:
-        oracle_cards = json.load(oracle_cards_file)
+    print("%.2f parse args done" % (time.time() - start))
 
-    db = relevant_cards(oracle_cards)
-    token_db = tokens(oracle_cards)
+    db = []
+    token_db = []
+    with open("default-cards.json", encoding="utf8") as oracle_cards_file:
+        for card in ijson.items(oracle_cards_file, "item"):
+            if card.get("all_parts"):
+                db.append(card)
+            if card.get("type_line") and "Token" in card.get("type_line"):
+                token_db.append(card)
+
+    print("%.2f read db from file done" % (time.time() - start))
 
     with open(args.path, encoding="utf8") as decklist_file:
         rows = decklist_file.readlines()
 
     token_ids = []
     for i in rows:
-        token_ids.extend(find_tokens(db, i, format))
+        token_ids.extend(find_token_ids(db, i, format))
+    
+    del db
+    del decklist_file
+    print("%.2f read deck from file done" % (time.time() - start))
 
     tokens = []
 
     for id in list(set(token_ids)):
-        found_token = ([ item for item in token_db if item.get("id") == id ])
-        if len(found_token) > 0:
-            token = found_token[0]
+        token = (next(item for item in token_db if item.get("id") == id ))
+        if token:
             element = { "name": token["name"]}
             element.update( { "type": token["type_line"].replace("\u2014", "-") } )
 
@@ -76,7 +83,9 @@ if __name__ == '__main__':
             
             if len(next((item for item in tokens if item == element), [])) == 0:
                 tokens.append(element)
-    
+
+    print("%.2f token mapping done" % (time.time() - start))
+
     if len(tokens) > 0:
         tokens = sorted(tokens, key=lambda d: d["name"])
         for i in range(0, len(tokens)):
@@ -84,3 +93,5 @@ if __name__ == '__main__':
 
     with open("tokens.json", "w", encoding="utf8") as file:
         json.dump(tokens, file, indent=2)
+
+    print("%.2f all done" % (time.time() - start))
